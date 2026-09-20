@@ -368,3 +368,43 @@ body,
   border-radius: inherit;
   background: #f3a65c;
 }
+
+.panels {
+  grid-template-rows: minmax(0, 1fr) 145px;
+}
+
+.football-card {
+  padding: 10px 14px 14px;
+}
+
+.football-card > .card-label {
+  margin-bottom: 6px;
+}
+
+.football-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.football-section h2 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.football-list {
+  display: grid;
+  gap: 5px;
+}
+
+.football-list .game {
+  align-items: center;
+  min-height: 28px;
+  padding: 6px 8px;
+  font-size: 10px;
+}
+
+.music-cover {
+  width: 120px;
+  height: 120px;
+}
