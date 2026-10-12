@@ -30,6 +30,13 @@ function App({ displayName }) {
     minute: '2-digit',
     hour12: true,
   })
+
+  const hour = now.getHours()
+  const greeting = hour < 12
+    ? 'Good Morning'
+    : hour < 17
+      ? 'Good Afternoon'
+      : 'Good Evening'
   
 const [weather, setWeather] = useState(null)
 const [weatherError, setWeatherError] = useState(false)
@@ -78,8 +85,7 @@ const [weatherError, setWeatherError] = useState(false)
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <h1>Good Morning, {displayName}</h1>
-
+        <h1>{greeting}, {displayName}</h1>
         <div className="header-weather" aria-label="Current weather">
           {weather ? (
             <>

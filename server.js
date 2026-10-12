@@ -8,6 +8,7 @@ import {
 } from 'node:fs'
 import { installAccounts } from './accounts.js'
 import { installPrivateApi } from './private-api.js'
+import { execFile } from 'node:child_process'
 
 const FRONTEND = 'http://127.0.0.1:5173'
 const BACKEND = 'http://127.0.0.1:3001'
@@ -33,6 +34,45 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '8kb' }))
 installAccounts(app, FRONTEND)
 installPrivateApi(app, FRONTEND)
+let shutdownPending = false
+
+app.post('/api/system/poweroff', (req, res) => {
+  if (
+    process.platform !== 'linux' ||
+    process.env.DESKBUDDY_ALLOW_SHUTDOWN !== 'true'
+  ) {
+    return res.status(503).json({
+      error: 'Shutdown is not enabled on this device.',
+    })
+  }
+
+  if (req.body?.confirm !== true) {
+    return res.status(400).json({ error: 'Shutdown confirmation required.' })
+  }
+
+  if (shutdownPending) {
+    return res.json({ ok: true })
+  }
+
+  shutdownPending = true
+
+  execFile(
+    '/usr/bin/sudo',
+    ['-n', '/usr/sbin/shutdown', '-P', '+1'],
+    { timeout: 10_000 },
+    (error) => {
+      if (error) {
+        shutdownPending = false
+        return res.status(500).json({
+          error: 'Shutdown failed. Check the Pi shutdown permission.',
+        })
+      }
+
+      res.json({ ok: true })
+    },
+  )
+})
+
 const footballCachePath = '.local/cfb-finals.json'
 let footballCache = null
 let footballRequest = null

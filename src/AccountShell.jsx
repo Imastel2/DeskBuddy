@@ -9,6 +9,7 @@ export default function AccountShell() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [shutdownScheduled, setShutdownScheduled] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -143,6 +144,33 @@ export default function AccountShell() {
     }
   }
 
+  async function powerOff() {
+    if (!window.confirm('Power off this Pi in one minute?')) return
+
+    setBusy(true)
+    setError('')
+
+    try {
+      const response = await apiFetch('/api/system/poweroff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirm: true }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Could not schedule shutdown.')
+      }
+
+      setShutdownScheduled(true)
+    } catch (requestError) {
+      setError(requestError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   async function saveTrello(event) {
     event.preventDefault()
     const fields = new FormData(event.currentTarget)
@@ -239,8 +267,21 @@ export default function AccountShell() {
           <button type="button" disabled={busy} onClick={logout}>
             Sign out
           </button>
+          <button
+            type="button"
+            disabled={busy || shutdownScheduled}
+            onClick={powerOff}
+          >
+            {shutdownScheduled ? 'Shutting down…' : 'Power off'}
+          </button>
         </div>
       </nav>
+
+      {shutdownScheduled && (
+        <p role="status" style={{ margin: '6px 0', color: '#ffca86' }}>
+          Pi shutdown scheduled. It will power off in about one minute.
+        </p>
+      )}
 
       {error && <p className="account-error" role="alert">{error}</p>}
 
