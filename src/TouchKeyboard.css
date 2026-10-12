@@ -1,0 +1,63 @@
+.touch-keyboard {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 10000;
+  height: 200px;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  background: #191a17;
+  border-top: 1px solid #766044;
+  box-shadow: 0 -8px 30px #0007;
+  user-select: none;
+}
+
+.touch-keyboard-row {
+  display: flex;
+  gap: 5px;
+  min-height: 0;
+}
+
+.touch-keyboard button {
+  flex: 1;
+  min-width: 0;
+  padding: 0 4px;
+  border: 1px solid #514b40;
+  border-radius: 6px;
+  background: #33312b;
+  color: #fff5e6;
+  font: inherit;
+  font-size: 17px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.touch-keyboard button:active,
+.touch-keyboard button[aria-pressed='true'] {
+  background: #79603e;
+}
+
+.touch-keyboard .touch-keyboard-space {
+  flex: 3;
+}
+
+.touch-keyboard .touch-keyboard-done {
+  background: #e9ad61;
+  color: #21180d;
+  font-weight: 700;
+}
+
+body.deskbuddy-keyboard-open .account-shell {
+  height: calc(100dvh - 200px);
+}
+
+body.deskbuddy-keyboard-open .account-login {
+  margin-top: 12px;
+  margin-bottom: 212px;
+}
+
+body.deskbuddy-keyboard-open .account-settings {
+  max-height: calc(100dvh - 250px);
+  overflow-y: auto;
+}

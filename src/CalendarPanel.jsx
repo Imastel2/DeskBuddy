@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { apiFetch } from './api.js'
 
 function getTodayRange() {
   const start = new Date()
   start.setHours(0, 0, 0, 0)
+  
 
   const end = new Date(start)
   end.setDate(end.getDate() + 1)
@@ -49,7 +51,7 @@ export default function CalendarPanel() {
 
     async function loadEvents() {
       try {
-        const response = await fetch(
+        const response = await apiFetch(
           `/api/calendar/today?${getTodayRange()}`,
           { signal: controller.signal },
         )

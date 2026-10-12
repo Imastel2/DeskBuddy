@@ -954,3 +954,169 @@
   padding: 0;
   border-radius: 4px;
 }
+
+/* Compact landscape displays, including the Pi screen. */
+@media (max-height: 600px) and (min-width: 480px) {
+  .account-shell {
+    height: 100dvh;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .account-shell .account-toolbar {
+    width: 100%;
+    margin: 0;
+    min-height: 28px;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+
+  .account-shell .account-toolbar button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .account-shell .account-settings {
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+    max-height: 45dvh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .account-shell .dashboard {
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    flex: 1;
+    min-height: 0;
+    grid-template-rows: 44px minmax(0, 1fr) 48px;
+    gap: 10px;
+    overflow: hidden;
+    border-radius: 16px;
+  }
+
+  .account-shell .dashboard-header {
+    min-width: 0;
+    gap: 12px;
+    padding: 0;
+  }
+
+  .account-shell .dashboard-header h1 {
+    min-width: 0;
+    margin: 0;
+    font-size: clamp(18px, 3vw, 24px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .account-shell .header-weather {
+    flex-shrink: 0;
+    padding: 6px 10px;
+  }
+
+  .account-shell .panels {
+    min-height: 0;
+    grid-template-columns: 1.08fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .account-shell .panel {
+    min-width: 0;
+    min-height: 0;
+    max-height: none;
+    padding: 12px;
+  }
+
+  .account-shell .panel h2,
+  .account-shell .spotify-heading > a {
+    font-size: 14px;
+    letter-spacing: 0.3px;
+  }
+
+  .account-shell .calendar-panel {
+    overflow-y: auto;
+  }
+
+  .account-shell .tasks-heading {
+    margin-bottom: 10px;
+  }
+
+  .account-shell .trello-tasks .task-list {
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .account-shell .spotify-live {
+    gap: 8px;
+  }
+
+  .account-shell .spotify-art-link {
+    width: 76px;
+  }
+
+  .account-shell .spotify-art-fallback {
+    width: 64px;
+    height: 64px;
+  }
+
+  .account-shell .spotify-empty {
+    gap: 10px;
+  }
+
+  .account-shell .dashboard-footer {
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) 95px;
+    gap: 10px;
+  }
+
+  .account-shell .clock time {
+    font-size: 24px;
+  }
+}
+
+@media (max-height: 600px) and (min-width: 480px) {
+  #root .account-shell {
+    height: 100dvh;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  #root .account-toolbar {
+    flex-shrink: 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  #root .account-toolbar button {
+    padding: 5px 10px;
+  }
+
+  #root .account-shell .dashboard {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    grid-template-rows: 44px minmax(0, 1fr) 48px;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  #root .panels {
+    min-height: 0;
+    gap: 10px;
+  }
+
+  #root .panel {
+    min-height: 0;
+    max-height: none;
+    padding: 12px;
+  }
+}

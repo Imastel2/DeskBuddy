@@ -17,7 +17,7 @@ function getCondition(code, isDay) {
   return { label: 'Thunderstorms', icon: '⛈' }
 }
 
-function App() {
+function App({ displayName }) {
   const [now, setNow] = useState(new Date())
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const [weatherError, setWeatherError] = useState(false)
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <h1>Good Morning, Isaac</h1>
+        <h1>Good Morning, {displayName}</h1>
 
         <div className="header-weather" aria-label="Current weather">
           {weather ? (

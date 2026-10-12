@@ -2,10 +2,19 @@ import { useEffect, useState } from 'react'
 
 const CLIENT_ID = 'b3a00c542a154e548cecff48d29dcbde'
 const REDIRECT_URI = 'http://127.0.0.1:5173/'
-const TOKEN_KEY = 'deskbuddy_spotify_tokens'
+function spotifyStorageKey(name) {
+  const userId = sessionStorage.getItem('deskbuddy_user_id')
+
+  if (!userId) throw new Error('Sign in to DeskBuddy first.')
+
+  return `${name}:${userId}`
+}
+
+const TOKEN_KEY = () => spotifyStorageKey('deskbuddy_spotify_tokens')
 
 // Keeps React StrictMode from exchanging the same code twice.
 let callbackPromise = null
+let callbackOwner = null
 
 function randomString() {
   const bytes = crypto.getRandomValues(new Uint8Array(32))
@@ -17,7 +26,7 @@ function randomString() {
 
 function readTokens() {
   try {
-    return JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null')
+    return JSON.parse(localStorage.getItem(TOKEN_KEY()) || 'null')
   } catch {
     return null
   }
@@ -43,8 +52,8 @@ async function connectSpotify() {
     .replace(/\//g, '_')
     .replace(/=+$/, '')
 
-  sessionStorage.setItem('spotify_verifier', verifier)
-  sessionStorage.setItem('spotify_state', state)
+  sessionStorage.setItem(spotifyStorageKey('spotify_verifier'), verifier)
+  sessionStorage.setItem(spotifyStorageKey('spotify_state'), state)
 
   const url = new URL('https://accounts.spotify.com/authorize')
 
@@ -69,11 +78,13 @@ function clearCallback() {
   }
 
   window.history.replaceState({}, '', url)
-  sessionStorage.removeItem('spotify_verifier')
+  sessionStorage.removeItem(spotifyStorageKey('spotify_verifier'))
   sessionStorage.removeItem('spotify_state')
+  sessionStorage.removeItem(spotifyStorageKey('spotify_state'))
 }
 
 async function finishLogin() {
+  const tokenKey = TOKEN_KEY()
   const params = new URLSearchParams(window.location.search)
   const code = params.get('code')
   const error = params.get('error')
@@ -81,8 +92,8 @@ async function finishLogin() {
   if (!code && !error) return readTokens()
 
   try {
-    const expectedState = sessionStorage.getItem('spotify_state')
-
+    const expectedState = sessionStorage.getItem(spotifyStorageKey('spotify_state'))
+    
     if (!expectedState || params.get('state') !== expectedState) {
       throw new Error('Login could not be verified. Please connect again.')
     }
@@ -95,7 +106,7 @@ async function finishLogin() {
       )
     }
 
-    const verifier = sessionStorage.getItem('spotify_verifier')
+    const verifier = sessionStorage.getItem(spotifyStorageKey('spotify_verifier'))
 
     if (!verifier) {
       throw new Error('Login session expired. Please connect again.')
@@ -127,7 +138,7 @@ async function finishLogin() {
       expires_at: Date.now() + data.expires_in * 1000,
     }
 
-  localStorage.setItem(TOKEN_KEY, JSON.stringify(tokens))
+    localStorage.setItem(tokenKey, JSON.stringify(tokens))
 
     return tokens
   } finally {
@@ -176,8 +187,8 @@ async function getAccessToken(signal, forceRefresh = false) {
   }
 
 localStorage.setItem(
-    TOKEN_KEY,
-    JSON.stringify({
+    TOKEN_KEY(),
+      JSON.stringify({
       access_token: data.access_token,
       refresh_token: data.refresh_token || tokens.refresh_token,
       expires_at: Date.now() + data.expires_in * 1000,
@@ -204,7 +215,8 @@ export default function SpotifyPanel() {
   useEffect(() => {
     let active = true
 
-    if (!callbackPromise) {
+    if (!callbackPromise || callbackOwner !== TOKEN_KEY()) {
+      callbackOwner = TOKEN_KEY()
       callbackPromise = finishLogin()
     }
 
@@ -300,8 +312,8 @@ export default function SpotifyPanel() {
         setError(requestError.message)
 
         if (requestError.reconnect) {
-          localStorage.removeItem(TOKEN_KEY)
-          callbackPromise = null
+          localStorage.removeItem(TOKEN_KEY())
+            callbackPromise = null
           setConnected(false)
           return
         }
@@ -346,8 +358,8 @@ export default function SpotifyPanel() {
   }
 
   function disconnect() {
-      localStorage.removeItem(TOKEN_KEY)
-    callbackPromise = null
+    localStorage.removeItem(TOKEN_KEY())
+      callbackPromise = null
     setConnected(false)
     setPlayback(null)
     setChecked(false)

@@ -1,0 +1,133 @@
+.account-shell {
+  width: 100%;
+}
+
+.account-toolbar {
+  width: min(800px, calc(100% - 32px));
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #d8c9b4;
+}
+
+.account-toolbar > div {
+  display: flex;
+  gap: 8px;
+}
+
+.account-login,
+.account-settings {
+  box-sizing: border-box;
+  width: min(440px, calc(100% - 32px));
+  margin: 40px auto;
+  padding: 32px;
+  border: 1px solid #494338;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #2b2923, #1c1c19);
+  color: #f7f2e9;
+  box-shadow: 0 20px 60px #0004;
+}
+
+.account-settings {
+  width: min(800px, calc(100% - 32px));
+  margin: 0 auto 20px;
+}
+
+.account-brand {
+  color: #ffbd69;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.account-login h1,
+.account-settings h2 {
+  margin: 16px 0 10px;
+}
+
+.account-login p,
+.account-settings p {
+  color: #bfb4a3;
+  line-height: 1.5;
+}
+
+.account-login form,
+.account-settings form {
+  display: grid;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.account-login label,
+.account-settings label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.account-login input,
+.account-settings input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #554a3a;
+  border-radius: 10px;
+  background: #171714;
+  color: #fff7ec;
+  font: inherit;
+}
+
+.account-login input:focus,
+.account-settings input:focus {
+  outline: 2px solid #ffbd69;
+  outline-offset: 2px;
+}
+
+.account-login button,
+.account-settings button,
+.account-toolbar button {
+  padding: 11px 16px;
+  border: 1px solid #6c5436;
+  border-radius: 10px;
+  background: #3c3021;
+  color: #ffca86;
+  font: inherit;
+  cursor: pointer;
+}
+
+.account-login button {
+  background: #ffbd69;
+  color: #20180f;
+  font-weight: 700;
+}
+
+.account-shell button:disabled,
+.account-login button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.account-error {
+  color: #ffaaa0 !important;
+}
+
+.account-loading {
+  padding: 40px;
+  text-align: center;
+  color: #d8c9b4;
+}
+
+@media (max-width: 520px) {
+  .account-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .account-login,
+  .account-settings {
+    padding: 24px;
+  }
+}

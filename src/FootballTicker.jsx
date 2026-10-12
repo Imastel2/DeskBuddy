@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { apiFetch } from './api.js'
 
 function GameItem({ game }) {
   const date = new Date(game.startDate).toLocaleDateString([], {
@@ -32,7 +33,7 @@ export default function FootballTicker() {
       let nextDelay = 5 * 60_000
 
       try {
-        const response = await fetch('/api/football', {
+        const response = await apiFetch('/api/football', {
           signal: controller.signal,
         })
 

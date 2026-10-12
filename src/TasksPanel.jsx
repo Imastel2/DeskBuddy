@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { apiFetch } from './api.js'
 
 const LABEL_COLORS = {
   green: '#b3dfb5',
@@ -29,7 +30,7 @@ export default function TasksPanel() {
       let nextDelay = 30_000
 
       try {
-        const response = await fetch('/api/tasks', {
+        const response = await apiFetch('/api/tasks', {
           signal: controller.signal,
         })
 
