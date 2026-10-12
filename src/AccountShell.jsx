@@ -228,6 +228,14 @@ export default function AccountShell() {
             {settingsOpen ? 'Close settings' : 'Account settings'}
           </button>
 
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => window.location.reload()}
+          >
+            Refresh
+          </button>
+
           <button type="button" disabled={busy} onClick={logout}>
             Sign out
           </button>

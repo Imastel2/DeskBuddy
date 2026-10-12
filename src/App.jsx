@@ -25,11 +25,12 @@ function App({ displayName }) {
     return () => clearInterval(timer)
   }, [])
 
-  const time = now.toLocaleTimeString([], {
+  const time = now.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
+    hour12: true,
   })
-
+  
 const [weather, setWeather] = useState(null)
 const [weatherError, setWeatherError] = useState(false)
 
