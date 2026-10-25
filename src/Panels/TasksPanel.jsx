@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { apiFetch } from './api.js'
+import { apiFetch } from '../api.js'
 
 const LABEL_COLORS = {
   green: '#b3dfb5',

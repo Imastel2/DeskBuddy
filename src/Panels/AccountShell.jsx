@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import App from './App.jsx'
-import { apiFetch } from './api.js'
-import './AccountShell.css'
+import App from '../App.jsx'
+import { apiFetch } from '../api.js'
+import '../Styles/AccountShell.css'
 
 export default function AccountShell() {
   const [user, setUser] = useState(null)
@@ -144,6 +144,26 @@ export default function AccountShell() {
     }
   }
 
+  async function openDesktop() {
+    setBusy(true)
+    setError('')
+
+    try {
+      const response = await apiFetch('/api/system/desktop', {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        const result = await response.json()
+        throw new Error(result.error || 'Could not open the desktop.')
+      }
+    } catch (requestError) {
+      setError(requestError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   async function powerOff() {
     if (!window.confirm('Power off this Pi in one minute?')) return
 
@@ -273,6 +293,13 @@ export default function AccountShell() {
             onClick={powerOff}
           >
             {shutdownScheduled ? 'Shutting down…' : 'Power off'}
+          </button>
+          <button
+            type="button"
+            disabled={busy || shutdownScheduled}
+            onClick={openDesktop}
+          >
+            Open desktop
           </button>
         </div>
       </nav>

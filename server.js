@@ -73,6 +73,31 @@ app.post('/api/system/poweroff', (req, res) => {
   )
 })
 
+app.post('/api/system/desktop', (req, res) => {
+  if (process.platform !== 'linux') {
+    return res.status(503).json({
+      error: 'Desktop access is available on the Pi.',
+    })
+  }
+
+  const kioskPattern = String.raw`^/usr/lib/chromium/chromium .*--user-data-dir=/home/deskbuddy/\.config/deskbuddy-browser( |$)`
+
+  execFile(
+    '/usr/bin/pkill',
+    ['-TERM', '-u', String(process.getuid()), '-f', kioskPattern],
+    { timeout: 5000 },
+    (error) => {
+      if (error) {
+        return res.status(500).json({
+          error: 'Could not close the kiosk browser.',
+        })
+      }
+
+      res.json({ ok: true })
+    },
+  )
+})
+
 const footballCachePath = '.local/cfb-finals.json'
 let footballCache = null
 let footballRequest = null

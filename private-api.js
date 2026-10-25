@@ -6,6 +6,25 @@ export function installPrivateApi(app, frontend) {
   const pendingLogins = new Map()
   const trelloCaches = new Map()
 
+  app.get('/api/preferences/music', (req, res) => {
+    const saved = readConnections(req.user.id, 'preferences').music
+
+    res.json({
+      service: saved?.service === 'youtube' ? 'youtube' : 'spotify',
+    })
+  })
+
+  app.post('/api/preferences/music', (req, res) => {
+    const service = req.body?.service
+
+    if (service !== 'spotify' && service !== 'youtube') {
+      return res.status(400).json({ error: 'Invalid music service.' })
+    }
+
+    writeConnection(req.user.id, 'preferences', 'music', { service })
+    res.json({ service })
+  })
+
   const {
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,

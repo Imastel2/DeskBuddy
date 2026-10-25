@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import './App.css'
-import SpotifyPanel from './SpotifyPanel.jsx'
-import CalendarPanel from './CalendarPanel.jsx'
-import TasksPanel from './TasksPanel.jsx'
-import FootballTicker from './FootballTicker.jsx'
+import './Styles/App.css'
+import MusicPanel from './Panels/MusicPanel.jsx'
+import CalendarPanel from './Panels/CalendarPanel.jsx'
+import TasksPanel from './Panels/TasksPanel.jsx'
+import FootballTicker from './Panels/FootballTicker.jsx'
 
 function getCondition(code, isDay) {
   if (code === 0) return { label: 'Clear', icon: isDay ? '☀' : '☾' }
@@ -103,7 +103,7 @@ const [weatherError, setWeatherError] = useState(false)
       <main className="panels">
         <CalendarPanel />
         <TasksPanel />
-        <SpotifyPanel />
+        <MusicPanel />
       </main>
 
       <footer className="dashboard-footer">

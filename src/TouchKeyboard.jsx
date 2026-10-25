@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import './TouchKeyboard.css'
-
+import './Styles/TouchKeyboard.css'
 const LETTER_ROWS = [
   '1234567890',
   'qwertyuiop',

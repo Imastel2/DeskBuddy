@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { apiFetch } from './api.js'
+import { apiFetch } from '../api.js'
 
 function GameItem({ game }) {
   const date = new Date(game.startDate).toLocaleDateString([], {

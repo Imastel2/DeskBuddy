@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { apiFetch } from './api.js'
+import { apiFetch } from '../api.js'
 
 function getTodayRange() {
   const start = new Date()

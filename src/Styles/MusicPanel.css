@@ -1,0 +1,58 @@
+.music-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  gap: 5px;
+  overflow-y: auto;
+}
+
+.music-selector {
+    display: flex;
+    flex-shrink: 0;
+    gap: 4px;
+    padding: 4px;
+    background: #201e19;
+    border: 1px solid #514633;
+    border-radius: 12px;
+}
+
+.music-selector button {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 6px;
+  background: transparent;
+  color: #cfc5b5;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.music-selector button[aria-pressed="true"] {
+  background: #ffc166;
+  color: #241d12;
+}
+
+.music-selector button:focus-visible {
+    outline: 2px solid #fff0d8;
+    outline-offset: 2px;
+}
+
+#root .music-panel > .spotify-panel {
+  flex: 1;
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
