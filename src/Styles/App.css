@@ -19,15 +19,15 @@
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  padding: 4px 2px;
+  padding: 1px 1px;
 }
 
 .dashboard-header h1 {
   margin: 0;
   color: #faf6ef;
-  font-size: clamp(20px, 3vw, 28px);
+  font-size: clamp(10px, 3vw, 24px);
   font-weight: 650;
-  line-height: 1.2;
+  line-height: .5;
   letter-spacing: -0.8px;
 }
 
@@ -36,22 +36,23 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-  padding: 10px 14px;
+  padding: 5px 14px;
   border: 1px solid #514332;
-  border-radius: 14px;
+  border-radius: 10px;
   background: #f3b5680a;
 }
 
 .header-weather > span:first-child {
   color: #f3b568;
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 650;
   letter-spacing: -1px;
 }
 
 .header-weather > span:last-child {
   color: #d0c6b7;
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 650;
 }
 
 .header-weather .weather-message {
@@ -62,18 +63,18 @@
 
 .panels {
   display: grid;
-  grid-template-columns: 1.08fr 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
   min-height: 0;
 }
 
 .panel {
   min-width: 0;
   min-height: 0;
-  padding: 18px;
+  padding: 10px;
   overflow: auto;
   border: 1px solid #403c35;
-  border-radius: 16px;
+  border-radius: 10px;
   background: linear-gradient(160deg, #302d28, #282622);
 }
 
@@ -753,7 +754,7 @@
 .cfb-ticker::before {
   width: 62px;
   border-right: 1px solid #675034;
-  background: linear-gradient(160deg, #44321e, #30271d);
+  background: linear-gradient(160deg, #f6f6f7, #c70c0c);
   color: #ffc780;
   font-size: 12px;
   font-weight: 750;
@@ -784,23 +785,23 @@
 
 .cfb-game strong {
   color: #faf4e9;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 650;
   line-height: 1.3;
   letter-spacing: -0.3px;
 }
 
 .cfb-game .cfb-versus {
-  color: #9b8e79;
+  color: #ffffff;
   font-size: 12px;
 }
 
 .cfb-game .cfb-final {
   padding: 5px 8px;
-  border: 1px solid #f3b56835;
+  border: 1px solid #13056135;
   border-radius: 6px;
-  background: #f3b56812;
-  color: #ffc780;
+  background: #13056112;
+  color: #e70707;
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
@@ -809,14 +810,14 @@
 }
 
 .cfb-game .cfb-date {
-  color: #c1b49f;
+  color: #ffffff;
   font-size: 12px;
 }
 
 .cfb-message {
   margin: 0;
   padding: 8px 16px;
-  color: #c1b49f;
+  color: #a99fc1;
   font-size: 13px;
   line-height: 1.4;
 }
@@ -1118,5 +1119,118 @@
     min-height: 0;
     max-height: none;
     padding: 12px;
+  }
+}
+
+/* Raycast-inspired dashboard */
+body {
+  background: #08090b;
+  scrollbar-color: #424653 transparent;
+}
+
+#root .dashboard {
+  color: #f1f2f6;
+  background: radial-gradient(ellipse at 50% 0%, #131010, #191d2c 68%);
+  border-color: #f306e714;
+}
+
+.dashboard .calendar-panel {
+  --card-glow: #245b9e55;
+  --card-accent: #9ccaff;
+}
+
+.dashboard .tasks-panel {
+  --card-glow: #6635a858;
+  --card-accent: #d1b2ff;
+}
+
+.dashboard .music-panel {
+  --card-glow: #18cc4555;
+  --card-accent: #36ca62;
+}
+
+#root .dashboard .panels > .panel {
+  background:
+    radial-gradient(ellipse at 25% 0%, var(--card-glow), transparent 72%),
+    linear-gradient(170deg, #181a22, #101115);
+  border: 1px solid #ffffff1a;
+  border-radius: 16px;
+  box-shadow: inset 0 1px 0 #ffffff0a, 0 10px 26px #00000030;
+}
+
+#root .dashboard .header-weather,
+#root .dashboard .football-ticker {
+  background: #051df106;
+  border-color: #0a157414;
+}
+
+#root .dashboard .header-weather > span {
+  color: #e3e7f2;
+}
+
+#root .dashboard .calendar-connect {
+  color: #c2ddff;
+  background: #9ccaff12;
+  border-color: #9ccaff40;
+}
+
+#root .dashboard .music-selector {
+  background: #08090b85;
+  border-color: #ffffff20;
+}
+
+#root .dashboard .music-selector button {
+  color: #d4d5de;
+}
+
+#root .dashboard .music-selector button[aria-pressed="true"] {
+  color: #fff1f5;
+  background: #ffadc32b;
+  box-shadow: inset 0 0 0 1px #ffadc366;
+}
+
+#root .dashboard .panel h2,
+#root .dashboard .spotify-heading > a {
+  color: #f5f5f5;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px #ff3c6355;
+}
+
+#root .dashboard .panel h2::before {
+  content: none;
+}
+
+/* Compact account toolbar */
+#root .account-toolbar {
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+#root .account-toolbar button {
+  min-height: 32px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+#root .account-shell .dashboard {
+  margin-top: 4px;
+}
+
+/* Give the cards more room on the Pi */
+@media (max-height: 700px) and (min-width: 480px) {
+  #root .account-toolbar {
+    margin-bottom: 0;
+  }
+
+  #root .account-shell .dashboard {
+    margin-top: 0;
+    grid-template-rows: 40px minmax(0, 1fr) 60px;
+    gap: 8px;
   }
 }

@@ -67,28 +67,7 @@ export default function MusicPanel() {
 
   return (
     <section className="panel music-panel" aria-label="Music">
-      <div className="music-selector">
-        <button
-          type="button"
-          aria-pressed={service === 'spotify'}
-          disabled={loading || saving}
-          onClick={() => selectService('spotify')}
-        >
-          Spotify
-        </button>
-
-        <button
-          type="button"
-          aria-pressed={service === 'youtube'}
-          disabled={loading || saving}
-          onClick={() => selectService('youtube')}
-        >
-          YouTube Music
-        </button>
-      </div>
-
       {error && <p role="alert">{error}</p>}
-
       {loading
         ? <p role="status">Loading music preference…</p>
         : service === 'spotify'

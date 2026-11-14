@@ -9,12 +9,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  color: #d8c9b4;
+  color: #ffffff;
 }
 
 .account-toolbar > div {
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 
 .account-login,
@@ -23,11 +23,11 @@
   width: min(440px, calc(100% - 32px));
   margin: 40px auto;
   padding: 32px;
-  border: 1px solid #494338;
+  border: 1px solid #0bb7e2;
   border-radius: 24px;
-  background: linear-gradient(145deg, #2b2923, #1c1c19);
-  color: #f7f2e9;
-  box-shadow: 0 20px 60px #0004;
+  background: linear-gradient(145deg, #3a13c5, #53127e);
+  color: #ffffff;
+  box-shadow: 0 20px 60px rgba(212, 7, 7, 0.267);
 }
 
 .account-settings {
@@ -89,17 +89,17 @@
 .account-login button,
 .account-settings button,
 .account-toolbar button {
-  padding: 11px 16px;
-  border: 1px solid #6c5436;
+  padding: 10px 10px;
+  border: 1px solid #fcf7f7;
   border-radius: 10px;
-  background: #3c3021;
-  color: #ffca86;
+  background: #0f0f0f;
+  color: #f7f6f5;
   font: inherit;
   cursor: pointer;
 }
 
 .account-login button {
-  background: #ffbd69;
+  background: #967447;
   color: #20180f;
   font-weight: 700;
 }
