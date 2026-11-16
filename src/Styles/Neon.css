@@ -1,0 +1,127 @@
+.neon-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+  padding: 8px 10px;
+  border: 1px solid #ffffff1a;
+  border-radius: 8px;
+  background: #0005;
+  font-size: 12px;
+}
+
+.neon-production-label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.neon-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  --neon-dot-color: #a3a3a3;
+}
+
+.neon-status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: var(--neon-dot-color);
+}
+
+.neon-status[data-status="Active"] {
+  --neon-dot-color: #4ade80;
+}
+
+.neon-status[data-status="Initializing"] {
+  --neon-dot-color: #fb923c;
+}
+
+.neon-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.neon-details dt,
+.neon-details dd {
+  margin: 0;
+  padding: 9px 0;
+  overflow-wrap: anywhere;
+}
+
+.neon-details dt {
+  padding-right: 8px;
+  color: var(--miami-muted, #bcc0d1);
+}
+
+.neon-details dd {
+  font-weight: 600;
+}
+
+.neon-details > :nth-child(n + 3) {
+  border-top: 1px solid #ffffff20;
+}
+
+.dashboard .task-sources--neon {
+  --card-accent: #63ecc4;
+  --card-glow: #30e3b638;
+}
+
+#root .dashboard .neon-project-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.neon-project-heading .card-logo {
+  flex-shrink: 0;
+}
+
+.neon-section-heading {
+  margin: 12px 0 4px;
+  color: var(--miami-muted, #bcc0d1);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.neon-section-note,
+.neon-operations li > span {
+  color: var(--miami-muted, #bcc0d1);
+  font-size: 11px;
+}
+
+.neon-section-note {
+  margin: 6px 0;
+}
+
+.neon-operations {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.neon-operations li {
+  display: grid;
+  gap: 3px;
+  padding: 6px 0;
+  border-bottom: 1px solid #ffffff20;
+  font-size: 12px;
+}
+
+.neon-operations strong {
+  text-transform: capitalize;
+}
+
+.neon-section-heading + .neon-details {
+  margin-top: 0;
+}

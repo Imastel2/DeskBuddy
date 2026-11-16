@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import './Styles/App.css'
 import MusicPanel from './Panels/MusicPanel.jsx'
-import CalendarPanel from './Panels/CalendarPanel.jsx'
-import TasksPanel from './Panels/TasksPanel.jsx'
+import CalendarSourcesPanel from './Panels/VercelPanel.jsx'
+import TaskSourcesPanel from './Panels/Canvas.jsx'
 import FootballTicker from './Panels/FootballTicker.jsx'
 
 function getCondition(code, isDay) {
@@ -101,8 +101,8 @@ const [weatherError, setWeatherError] = useState(false)
       </header>
 
       <main className="panels">
-        <CalendarPanel />
-        <TasksPanel />
+        <CalendarSourcesPanel />
+        <TaskSourcesPanel />
         <MusicPanel />
       </main>
 

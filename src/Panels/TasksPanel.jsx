@@ -75,7 +75,9 @@ export default function TasksPanel() {
   return (
     <section className="panel tasks-panel trello-tasks">
       <div className="tasks-heading">
-        <h2>Work Tasks</h2>
+        <h2>
+          <img className="card-logo" src="/Logos/atlassian-trello.png" alt="Trello work tasks" />
+        </h2>
 
         {data && (
           <a

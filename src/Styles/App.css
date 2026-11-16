@@ -754,8 +754,6 @@
 .cfb-ticker::before {
   width: 62px;
   border-right: 1px solid #675034;
-  background: linear-gradient(160deg, #f6f6f7, #c70c0c);
-  color: #ffc780;
   font-size: 12px;
   font-weight: 750;
   letter-spacing: 1.2px;
@@ -784,7 +782,6 @@
 }
 
 .cfb-game strong {
-  color: #faf4e9;
   font-size: 14px;
   font-weight: 650;
   line-height: 1.3;
@@ -1122,56 +1119,14 @@
   }
 }
 
-/* Raycast-inspired dashboard */
-body {
-  background: #08090b;
-  scrollbar-color: #424653 transparent;
-}
-
-#root .dashboard {
-  color: #f1f2f6;
-  background: radial-gradient(ellipse at 50% 0%, #131010, #191d2c 68%);
-  border-color: #f306e714;
-}
-
-.dashboard .calendar-panel {
-  --card-glow: #245b9e55;
-  --card-accent: #9ccaff;
-}
-
-.dashboard .tasks-panel {
-  --card-glow: #6635a858;
-  --card-accent: #d1b2ff;
-}
-
-.dashboard .music-panel {
-  --card-glow: #18cc4555;
-  --card-accent: #36ca62;
-}
-
 #root .dashboard .panels > .panel {
-  background:
-    radial-gradient(ellipse at 25% 0%, var(--card-glow), transparent 72%),
-    linear-gradient(170deg, #181a22, #101115);
   border: 1px solid #ffffff1a;
   border-radius: 16px;
   box-shadow: inset 0 1px 0 #ffffff0a, 0 10px 26px #00000030;
 }
 
-#root .dashboard .header-weather,
-#root .dashboard .football-ticker {
-  background: #051df106;
-  border-color: #0a157414;
-}
-
 #root .dashboard .header-weather > span {
   color: #e3e7f2;
-}
-
-#root .dashboard .calendar-connect {
-  color: #c2ddff;
-  background: #9ccaff12;
-  border-color: #9ccaff40;
 }
 
 #root .dashboard .music-selector {
@@ -1183,21 +1138,13 @@ body {
   color: #d4d5de;
 }
 
-#root .dashboard .music-selector button[aria-pressed="true"] {
-  color: #fff1f5;
-  background: #ffadc32b;
-  box-shadow: inset 0 0 0 1px #ffadc366;
-}
-
 #root .dashboard .panel h2,
 #root .dashboard .spotify-heading > a {
-  color: #f5f5f5;
   font-size: 16px;
   font-weight: 900;
   letter-spacing: 0.16em;
   line-height: 1.2;
   text-transform: uppercase;
-  text-shadow: 0 0 10px #ff3c6355;
 }
 
 #root .dashboard .panel h2::before {
@@ -1233,4 +1180,128 @@ body {
     grid-template-rows: 40px minmax(0, 1fr) 60px;
     gap: 8px;
   }
+}
+
+/* Midnight Miami */
+body {
+  background: #0b0c13;
+  scrollbar-color: #434961 transparent;
+}
+
+#root .dashboard {
+  --miami-text: #f2f1f7;
+  --miami-muted: #bcc0d1;
+  --miami-border: #ffffff1a;
+  --miami-card-base: linear-gradient(170deg, #171925, #101119);
+
+  color: var(--miami-text);
+  background: radial-gradient(ellipse at 50% 0%, #1c2035, #10121d 74%);
+  border-color: #8b92c42e;
+}
+
+.dashboard .calendar-panel {
+  --card-accent: #68bce0;
+  --card-glow: #68bce029;
+}
+
+.dashboard .task-sources--trello {
+  --card-accent: #bba4f2;
+  --card-glow: #bba4f229;
+}
+
+.dashboard .task-sources--canvas {
+  --card-accent: #f07991;
+  --card-glow: #f0799133;
+}
+
+.dashboard .music-panel {
+  --card-accent: #65ca9c;
+  --card-glow: #65ca9c29;
+}
+
+#root .dashboard .panels > .panel,
+#root .dashboard .panels > .task-sources {
+  background:
+    radial-gradient(ellipse at 20% 0%, var(--card-glow), transparent 65%),
+    var(--miami-card-base);
+  border-color: var(--miami-border);
+}
+
+#root .dashboard .panel h2,
+#root .dashboard .spotify-heading > a {
+  color: var(--miami-text);
+  text-shadow: 0 0 8px var(--card-glow);
+}
+
+#root .dashboard .canvas-course,
+#root .dashboard .spotify-artist,
+#root .dashboard .tasks-board-link {
+  color: var(--miami-muted);
+}
+
+#root .dashboard .calendar-connect {
+  color: #bce8fa;
+  background: #68bce014;
+  border-color: #68bce04d;
+}
+
+#root .dashboard .music-selector button[aria-pressed="true"] {
+  color: #d5f9e8;
+  background: #65ca9c26;
+  box-shadow: inset 0 0 0 1px #65ca9c66;
+}
+
+#root .dashboard .header-weather,
+#root .dashboard .football-ticker {
+  background: #171a29;
+  border-color: var(--miami-border);
+}
+
+#root .dashboard .cfb-ticker::before {
+  background: linear-gradient(160deg, #3b2033, #211626);
+  border-right-color: #f0799138;
+  color: #ffa1b4;
+}
+
+#root .dashboard .cfb-game strong {
+  color: var(--miami-text);
+}
+
+#root .account-toolbar {
+  color: #bcc0d1;
+}
+
+#root .account-toolbar button {
+  color: #e6e7f0;
+  background: #171925;
+  border-color: #ffffff22;
+}
+
+#root .account-toolbar button:hover:not(:disabled) {
+  background: #25283b;
+  border-color: #ffffff40;
+}
+
+#root .account-toolbar button.account-power-off {
+  color: #ffa1b4;
+  border-color: #f0799140;
+}
+
+.dashboard .card-logo {
+  display: block;
+  width: auto;
+  height: 22px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.dashboard .card-heading-context {
+  margin-inline-start: 8px;
+  color: var(--miami-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  text-shadow: none;
 }

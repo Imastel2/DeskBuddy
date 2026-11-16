@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import { apiFetch } from '../api.js'
 import SpotifyPanel from './SpotifyPanel.jsx'
 import YoutubeMusicPanel from './YoutubeMusicPanel.jsx'
+import NeonPanel from './Neon.jsx'
 import '../Styles/MusicPanel.css'
 
-export default function MusicPanel() {
+function MusicContent({ hidden }) {
   const [service, setService] = useState('spotify')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -66,7 +67,7 @@ export default function MusicPanel() {
   }
 
   return (
-    <section className="panel music-panel" aria-label="Music">
+    <section className="panel music-panel" aria-label="Music" hidden={hidden}>
       {error && <p role="alert">{error}</p>}
       {loading
         ? <p role="status">Loading music preference…</p>
@@ -74,5 +75,33 @@ export default function MusicPanel() {
           ? <SpotifyPanel />
           : <YoutubeMusicPanel />}
     </section>
+  )
+}
+
+export default function MusicPanel() {
+  const [view, setView] = useState('music')
+
+  return (
+    <div className={`task-sources task-sources--${view}`}>
+      <MusicContent hidden={view !== 'music'} />
+      {view === 'neon' && <NeonPanel />}
+
+      <div className="task-source-buttons" role="group" aria-label="Music and Neon views">
+        <button
+          type="button"
+          aria-pressed={view === 'music'}
+          onClick={() => setView('music')}
+        >
+          Spotify
+        </button>
+        <button
+          type="button"
+          aria-pressed={view === 'neon'}
+          onClick={() => setView('neon')}
+        >
+          Neon
+        </button>
+      </div>
+    </div>
   )
 }

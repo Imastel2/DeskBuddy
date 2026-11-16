@@ -1,0 +1,117 @@
+.task-sources {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 4px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.task-source-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid #ffffff26;
+}
+
+.task-sources .task-source-buttons > button {
+  min-height: 32px;
+  border: 0;
+  border-radius: 0;
+}
+
+.task-sources .task-source-buttons > button + button {
+  border-left: 1px solid #ffffff26;
+}
+
+.task-sources button {
+  padding: 4px 8px;
+  border: 1px solid #51445c;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.canvas-feed-form,
+.canvas-due-list {
+  display: grid;
+  gap: 8px;
+}
+
+.canvas-feed-form input {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+}
+
+.canvas-due-list {
+  list-style: none;
+  padding: 0;
+}
+
+.canvas-due-list li {
+  display: grid;
+  gap: 2px;
+  overflow-wrap: anywhere;
+}
+
+.canvas-due-list .canvas-course {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+@media (min-height: 601px), (max-width: 479px) {
+  .task-sources {
+    height: 380px;
+  }
+}
+
+.task-sources {
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid #403c35;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #302d28, #282622);
+}
+
+.task-sources > .panel {
+  max-height: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.task-sources--canvas h2 {
+  margin-bottom: 4px;
+}
+
+.task-sources--canvas .canvas-change-feed {
+  padding: 3px 7px;
+  font-size: 11px;
+}
+
+#root .dashboard .task-source-buttons {
+  border-top-color: var(--miami-border);
+  background: #101119;
+}
+
+#root .dashboard .task-source-buttons > button {
+  color: var(--miami-muted);
+  background: transparent;
+}
+
+#root .dashboard .task-source-buttons > button + button {
+  border-left-color: var(--miami-border);
+}
+
+#root .dashboard .task-source-buttons > button[aria-pressed="true"] {
+  color: var(--card-accent);
+  background: var(--card-glow);
+  box-shadow: inset 0 2px 0 var(--card-accent);
+}
+
+#root .dashboard .task-sources--canvas .canvas-change-feed,
+#root .dashboard .task-sources--canvas .canvas-feed-form button {
+  color: #f9c3cf;
+  background: #241924;
+  border-color: #f0799140;
+}

@@ -56,3 +56,12 @@
   background: transparent;
   box-shadow: none;
 }
+
+.dashboard .task-sources--music {
+  --card-accent: #65ca9c;
+  --card-glow: #65ca9c29;
+}
+
+.task-sources > .music-panel[hidden] {
+  display: none;
+}

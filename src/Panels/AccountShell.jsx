@@ -290,6 +290,7 @@ export default function AccountShell() {
           <button
             type="button"
             disabled={busy || shutdownScheduled}
+            className="account-power-off"
             onClick={powerOff}
           >
             {shutdownScheduled ? 'Shutting down…' : 'Power off'}

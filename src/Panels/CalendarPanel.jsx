@@ -91,7 +91,9 @@ export default function CalendarPanel() {
 
   return (
     <section className="panel calendar-panel">
-      <h2>Today's Calendar</h2>
+      <h2>
+        <img className="card-logo" src="/Logos/google-calendar.png" alt="Today's Calendar" />
+      </h2>
 
       <a className="calendar-connect" href="/auth/google">
         {data.accounts.length ? '+ Add / reconnect account' : 'Connect Google Calendar'}

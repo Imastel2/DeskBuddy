@@ -1,8 +1,304 @@
+import ical from 'node-ical'
 import { google } from 'googleapis'
 import { randomBytes } from 'node:crypto'
 import { readConnections, writeConnection } from './accounts.js'
 
 export function installPrivateApi(app, frontend) {
+  let neonUsageCache
+
+  async function loadNeonOperations(project, endpointId, apiKey) {
+    try {
+      const url = `https://console.neon.tech/api/v2/projects/${project}/operations?limit=50`
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        signal: AbortSignal.timeout(5_000),
+      })
+
+      if (!response.ok) return null
+
+      const { operations } = await response.json()
+      return operations
+        .filter((operation) => operation.endpoint_id === endpointId)
+        .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))
+        .slice(0, 3)
+        .map((operation) => ({
+          id: operation.id,
+          action: operation.action,
+          status: operation.status,
+          createdAt: operation.created_at,
+        }))
+    } catch {
+      return null
+    }
+  }
+
+  async function loadNeonUsage(projectId, apiKey) {
+    const orgId = process.env.NEON_ORG_ID?.trim()
+    if (!orgId) return { message: 'Neon organization ID needed.' }
+
+    const to = new Date()
+    to.setUTCHours(0, 0, 0, 0)
+    const from = new Date(to)
+    from.setUTCDate(from.getUTCDate() - 7)
+
+    const cacheKey = `${orgId}/${projectId}/${to.toISOString()}`
+    if (neonUsageCache?.key === cacheKey && neonUsageCache.expiresAt > Date.now()) {
+      return neonUsageCache.result
+    }
+
+    const url = new URL('https://console.neon.tech/api/v2/consumption_history/v2/projects')
+    url.search = new URLSearchParams({
+      org_id: orgId,
+      project_ids: projectId,
+      from: from.toISOString(),
+      to: to.toISOString(),
+      granularity: 'daily',
+      metrics: 'compute_unit_seconds,public_network_transfer_bytes',
+    }).toString()
+
+    const result = (async () => {
+      try {
+        const response = await fetch(url, {
+          headers: { Authorization: `Bearer ${apiKey}` },
+          signal: AbortSignal.timeout(5_000),
+        })
+
+        if (response.status === 403) {
+          return { message: 'Usage history unavailable for this plan or key.' }
+        }
+
+        if (!response.ok) {
+          return { message: `Usage unavailable (${response.status}).` }
+        }
+
+        const { projects } = await response.json()
+        const project = projects?.find((entry) => entry.project_id === projectId)
+        const days = project?.periods?.flatMap((period) => period.consumption ?? []) ?? []
+
+        if (days.length === 0) return { message: 'No usage history for this period.' }
+
+        let computeSeconds = 0
+        let transferBytes = 0
+        for (const day of days) {
+          for (const { metric_name, value } of day.metrics ?? []) {
+            if (!Number.isFinite(value)) continue
+            if (metric_name === 'compute_unit_seconds') computeSeconds += value
+            if (metric_name === 'public_network_transfer_bytes') transferBytes += value
+          }
+        }
+
+        return { computeHours: computeSeconds / 3600, transferBytes }
+      } catch {
+        return { message: 'Usage temporarily unavailable.' }
+      }
+    })()
+
+    neonUsageCache = { key: cacheKey, expiresAt: Date.now() + 15 * 60_000, result }
+    return result
+  }
+
+  app.get('/api/neon/status', async (req, res) => {
+    res.set('Cache-Control', 'no-store')
+
+    const apiKey = process.env.NEON_API_KEY?.trim()
+    const projectId = process.env.NEON_PROJECT_ID?.trim()
+    const endpointId = process.env.NEON_ENDPOINT_ID?.trim()
+
+    if (!apiKey || !projectId || !endpointId) {
+      return res.json({ status: 'Not configured' })
+    }
+
+    const project = encodeURIComponent(projectId)
+    const compute = encodeURIComponent(endpointId)
+    const url = `https://console.neon.tech/api/v2/projects/${project}/endpoints/${compute}`
+
+    try {
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        signal: AbortSignal.timeout(8_000),
+      })
+
+      if (!response.ok) {
+        return res.status(502).json({ status: `Neon API error (${response.status})` })
+      }
+
+      const { endpoint } = await response.json()
+      let branch = null
+        if (endpoint.branch_id) {
+          try {
+            const branchId = encodeURIComponent(endpoint.branch_id)
+            const branchResponse = await fetch(
+              `https://console.neon.tech/api/v2/projects/${project}/branches/${branchId}`,
+              {
+                headers: { Authorization: `Bearer ${apiKey}` },
+                signal: AbortSignal.timeout(5_000),
+              },
+            )
+
+            if (branchResponse.ok) {
+              const branchData = await branchResponse.json()
+              branch = branchData.branch
+            }
+          } catch {
+            // Keep reporting compute status when branch details are unavailable.
+          }
+        }
+
+      let projectName = null
+        try {
+          const projectResponse = await fetch(
+            `https://console.neon.tech/api/v2/projects/${project}`,
+            {
+              headers: { Authorization: `Bearer ${apiKey}` },
+              signal: AbortSignal.timeout(5_000),
+            },
+          )
+
+          if (projectResponse.ok) {
+            const projectData = await projectResponse.json()
+            projectName = projectData.project?.name ?? null
+          }
+        } catch {
+          // The compute status is still available if the project lookup fails.
+        }
+
+      const [operations, usage] = await Promise.all([
+        loadNeonOperations(project, endpointId, apiKey),
+        loadNeonUsage(projectId, apiKey),
+      ])
+
+
+      const labels = {
+        active: 'Active',
+        idle: 'Suspended',
+        init: 'Initializing',
+      }
+
+      return res.json({
+        status: labels[endpoint.current_state] ?? 'Unknown',
+        pending: labels[endpoint.pending_state] ?? null,
+        projectName,
+        branchSizeBytes: branch?.logical_size ?? null,
+        operations,
+        usage,
+      })
+    } catch {
+      return res.status(502).json({ status: 'Unavailable' })
+    }
+  })
+
+  app.get('/api/vercel/status', async (req, res) => {
+    res.set('Cache-Control', 'no-store')
+
+    const token = process.env.VERCEL_TOKEN
+    const projectId = process.env.VERCEL_PROJECT_ID
+    const teamId = process.env.VERCEL_TEAM_ID
+    const domain = process.env.VERCEL_PRODUCTION_DOMAIN?.trim()
+
+    if (!token || !projectId) {
+      return res.json({ status: 'Not configured' })
+    }
+
+    async function vercelGet(path, parameters = {}) {
+      const url = new URL(path, 'https://api.vercel.com')
+      for (const [key, value] of Object.entries(parameters)) {
+        url.searchParams.set(key, value)
+      }
+      if (teamId) url.searchParams.set('teamId', teamId)
+
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+        signal: AbortSignal.timeout(6_000),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Vercel API error (${response.status})`)
+      }
+
+      return response.json()
+    }
+
+    const labels = {
+      QUEUED: 'Queued',
+      INITIALIZING: 'Starting',
+      BUILDING: 'Building',
+      READY: 'Ready',
+      ERROR: 'Failed',
+      CANCELED: 'Canceled',
+      BLOCKED: 'Blocked',
+    }
+
+    function timestamp(value) {
+      const time = Number(value)
+      return Number.isFinite(time) && time > 0 ? time : null
+    }
+
+    function summarize(deployment) {
+      const meta = Object.entries(deployment.meta ?? {})
+      function gitField(suffix) {
+        return meta.find(([key, value]) =>
+          key.startsWith('git') &&
+          key.endsWith(suffix) &&
+          typeof value === 'string' &&
+          value.trim(),
+        )?.[1]
+      }
+
+      return {
+        id: deployment.uid ?? deployment.id,
+        status: labels[deployment.readyState ?? deployment.state] ?? 'Unknown',
+        title: gitField('CommitMessage')?.trim().split(/\r?\n/, 1)[0] ?? null,
+        branch: deployment.gitSource?.ref ?? gitField('CommitRef') ?? null,
+        sha: (deployment.gitSource?.sha ?? gitField('CommitSha'))?.slice(0, 7) ?? null,
+        createdAt: timestamp(deployment.createdAt ?? deployment.created),
+        startedAt: timestamp(deployment.buildingAt),
+        readyAt: timestamp(deployment.ready),
+      }
+    }
+
+    try {
+      const { deployments } = await vercelGet('/v6/deployments', {
+        projectId,
+        target: 'production',
+        limit: '4',
+      })
+      const [latest, ...history] = (deployments ?? []).map(summarize)
+
+      let live = { domain, status: domain ? 'Unavailable' : 'Domain not configured' }
+
+      if (domain) {
+        try {
+          const alias = await vercelGet(`/v4/aliases/${encodeURIComponent(domain)}`, {
+            projectId,
+          })
+          const liveId = alias.deploymentId ?? alias.deployment?.id
+
+          if (alias.projectId === projectId && liveId && !alias.redirect) {
+            const build = [latest, ...history].find((entry) => entry?.id === liveId)
+              ?? await vercelGet(`/v13/deployments/${encodeURIComponent(liveId)}`).then(summarize)
+
+            live = { domain, status: 'Live', build, isLatest: liveId === latest?.id }
+          }
+        } catch {
+          // Keep showing build status and history if the domain lookup fails.
+        }
+      }
+
+      return res.json({
+        status: latest?.status ?? 'No production builds',
+        projectName: deployments?.[0]?.name ?? process.env.VERCEL_PROJECT_NAME ?? null,
+        latest,
+        history,
+        live,
+      })
+    } catch (error) {
+      const status = /^Vercel API error \(\d+\)$/.test(error.message)
+        ? error.message
+        : 'Unavailable'
+      return res.status(502).json({ status })
+    }
+  })
+
   const pendingLogins = new Map()
   const trelloCaches = new Map()
 
@@ -231,6 +527,91 @@ export function installPrivateApi(app, frontend) {
     })
 
     res.json({ accounts, events })
+  })
+
+  const canvasOrigin = 'https://mynu.instructure.com'
+
+  app.post('/api/settings/canvas', (req, res) => {
+    const value = req.body?.feedUrl
+    const url = typeof value === 'string' ? URL.parse(value.trim()) : null
+
+    if (!url ||
+      url.origin !== canvasOrigin ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash ||
+      !/^\/feeds\/calendars\/user_[a-z\d_-]+\.ics$/i.test(url.pathname)
+    ) {
+      return res.status(400).json({
+        error: 'Paste the full Calendar Feed link from school',
+      })
+    }
+
+    writeConnection(req.user.id, 'canvas', 'main', { feedUrl: url.href})
+    res.json({ok: true})
+  })
+
+  app.get('/api/canvas/assignments', async (req, res) => {
+    res.set('Cache-Control', 'no-store')
+    const connection = readConnections(req.user.id, 'canvas').main
+
+    if (!connection) {
+      return res.json({ connected: false, assignments: [] })
+    }
+
+    try {
+      const response = await fetch(connection.feedUrl, {
+        redirect: 'error',
+        signal: AbortSignal.timeout(10_000),
+      })
+      if (!response.ok) throw new Error('Canvas feed request failed')
+
+      const source = await response.text()
+      if (!source.trimStart().startsWith('BEGIN:VCALENDAR')) {
+        throw new Error('Canvas did not return a calendar')
+      }
+
+      const events = await ical.async.parseICS(source)
+      const assignments = []
+
+      for (const event of Object.values(events)) {
+        if (
+          event.type !== 'VEVENT' ||
+          event.status === 'CANCELLED' ||
+          !(event.start instanceof Date) ||
+          !Number.isFinite(event.start.getTime())
+        ) continue
+
+        const url = typeof event.url === 'string'
+          ? URL.parse(event.url, canvasOrigin)
+          : null
+
+        // Canvas can identify assignments in either the event URL or UID.
+        const assignmentUrl = url?.origin === canvasOrigin &&
+          (/\/assignments\/\d+(?:\/|$)/.test(url.pathname) ||
+            /^#(?:event=)?assignment_\d+\b/.test(url.hash) ||
+            url.searchParams.get('event')?.match(/^assignment_\d+$/))
+
+        if (!assignmentUrl && !/\bassignment[-_]\d+\b/i.test(event.uid ?? '')) {
+          continue
+        }
+
+        assignments.push({
+          id: event.uid,
+          title: event.summary || 'Untitled assignment',
+          dueAt: event.start.toISOString(),
+          allDay: event.datetype === 'date',
+        })
+      }
+
+      assignments.sort((a, b) => a.dueAt.localeCompare(b.dueAt))
+      res.json({ connected: true, assignments })
+    } catch {
+      res.status(502).json({
+        error: 'Could not load the Canvas feed. Check the link and try again.',
+      })
+    }
   })
 
   app.post('/api/settings/trello', (req, res) => {

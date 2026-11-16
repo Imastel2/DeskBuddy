@@ -1,0 +1,132 @@
+#root .dashboard .panels > .task-sources.task-sources--vercel {
+  --miami-text: #fff;
+  --miami-muted: #fff;
+  --card-accent: #fff;
+  --card-glow: transparent;
+
+  color: #fff;
+  background:
+    radial-gradient(ellipse at top left, #ffffff20, transparent 60%),
+    linear-gradient(155deg, #171719, #080809 78%);
+}
+
+#root .dashboard .task-sources--vercel .task-source-buttons {
+  background: #000;
+}
+
+.vercel-build-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.vercel-build-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: #a3a3a3;
+}
+
+.vercel-build-status[data-status="Ready"] .vercel-build-dot {
+  background: #4ade80;
+}
+
+.vercel-build-status[data-status="Failed"] .vercel-build-dot {
+  background: #f87171;
+}
+
+.vercel-build-status[data-status="Queued"] .vercel-build-dot,
+.vercel-build-status[data-status="Starting"] .vercel-build-dot,
+.vercel-build-status[data-status="Building"] .vercel-build-dot {
+  background: #fb923c;
+}
+
+#root .dashboard .vercel-project-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.vercel-project-heading .card-logo {
+  flex: none;
+  height: 18px;
+}
+
+.vercel-project-name {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.vercel-deployment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  padding: 8px 10px;
+  border: 1px solid #ffffff1a;
+  border-radius: 8px;
+  background: #0005;
+}
+
+.vercel-environment {
+  color: #b9bcc6;
+  font-size: 11px;
+}
+
+.vercel-build-status[data-status="Live"] .vercel-build-dot {
+  background: #4ade80;
+}
+
+.vercel-latest,
+.vercel-live {
+  display: grid;
+  gap: 4px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ffffff1a;
+  overflow-wrap: anywhere;
+}
+
+.vercel-latest > strong {
+  font-size: 13px;
+}
+
+.vercel-detail {
+  color: #b9bcc6;
+  font-size: 11px;
+}
+
+.vercel-history-heading {
+  margin: 10px 0 4px;
+  color: #b9bcc6;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.vercel-history {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vercel-history li {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 2px 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #ffffff12;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.vercel-history time {
+  grid-column: 2;
+}

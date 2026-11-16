@@ -396,7 +396,7 @@ export default function SpotifyPanel() {
           target="_blank"
           rel="noreferrer"
         >
-          Spotify
+          <img className="card-logo" src="/Logos/spotify.png" alt="Spotify" />
         </a>
 
         {connected && (
