@@ -78,30 +78,32 @@ function MusicContent({ hidden }) {
   )
 }
 
-export default function MusicPanel() {
+export default function MusicPanel({ showNeon = true }) {
   const [view, setView] = useState('music')
 
   return (
     <div className={`task-sources task-sources--${view}`}>
       <MusicContent hidden={view !== 'music'} />
-      {view === 'neon' && <NeonPanel />}
+      {showNeon && view === 'neon' && <NeonPanel />}
 
-      <div className="task-source-buttons" role="group" aria-label="Music and Neon views">
-        <button
-          type="button"
-          aria-pressed={view === 'music'}
-          onClick={() => setView('music')}
-        >
-          Spotify
-        </button>
-        <button
-          type="button"
-          aria-pressed={view === 'neon'}
-          onClick={() => setView('neon')}
-        >
-          Neon
-        </button>
-      </div>
+      {showNeon && (
+        <div className="task-source-buttons" role="group" aria-label="Music and Neon views">
+          <button
+            type="button"
+            aria-pressed={view === 'music'}
+            onClick={() => setView('music')}
+          >
+            Spotify
+          </button>
+          <button
+            type="button"
+            aria-pressed={view === 'neon'}
+            onClick={() => setView('neon')}
+          >
+            Neon
+          </button>
+        </div>
+      )}
     </div>
   )
 }

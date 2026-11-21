@@ -345,7 +345,7 @@ export default function AccountShell() {
         </section>
       )}
 
-      <App key={user.id} displayName={user.displayName} />
+      <App key={user.id} displayName={user.displayName} username={user.username} />
     </div>
   )
 }

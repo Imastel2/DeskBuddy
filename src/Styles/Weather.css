@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;600;700&display=swap');
+#root .dashboard .weather-panel {
+  contain: size;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  font-size: 0.82rem;
+}
+
+#root .dashboard .weather-panel h2,
+.weather-panel h3 {
+  margin: 0 0 8px;
+}
+
+.weather-panel h3 {
+  margin-top: 14px;
+  font-size: 0.85rem;
+}
+
+.weather-panel-current {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.weather-panel-current > strong {
+  color: #a9def7;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.weather-panel-list,
+.weather-panel-details {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.weather-panel-list li,
+.weather-panel-details > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--miami-border, #ffffff1a);
+}
+
+.weather-panel-list li > :last-child,
+.weather-panel-details dd {
+  margin: 0;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+#root .dashboard .panels > .weather-panel {
+  background:
+    radial-gradient(ellipse at 0% 0%, #ff87332e, transparent 68%),
+    var(--miami-card-base);
+  border-color: var(--miami-border);
+  color: var(--miami-text);
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif;
+  font-size: 0.95rem;
+  scrollbar-color: #a47750 #101119;
+}
+
+.weather-panel .weather-panel-current > strong {
+  color: #ffb479;
+}
+
+.weather-panel .weather-panel-list li,
+.weather-panel .weather-panel-details > div {
+  border-bottom-color: var(--miami-border);
+}
+
+.weather-panel-logo {
+  display: block;
+  width: 130px;
+  max-width: 100%;
+  height: 24px;
+  object-fit: contain;
+  object-position: left center;
+}
