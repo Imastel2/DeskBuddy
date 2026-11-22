@@ -129,3 +129,42 @@
     padding: 24px;
   }
 }
+
+.account-login,
+.account-settings {
+  background: linear-gradient(145deg, #283e56 0%, #1b2d44 55%, #111e30 100%);
+  border-color: #405b75;
+  color: #edf4fc;
+  box-shadow: 0 16px 40px #070e1a66;
+}
+
+.account-login .account-brand,
+.account-login p,
+.account-settings p {
+  color: #b9cbe0;
+}
+
+.account-login input,
+.account-settings input {
+  background: #111f30;
+  border-color: #405b75;
+  color: #edf4fc;
+}
+
+.account-login input::placeholder,
+.account-settings input::placeholder {
+  color: #9baec4;
+}
+
+.account-login input:focus,
+.account-settings input:focus {
+  outline-color: #9cbedf;
+}
+
+.account-login button,
+.account-settings button {
+  background: #355574;
+  border-color: #557796;
+  color: #f1f6fc;
+  font-weight: 700;
+}

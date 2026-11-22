@@ -21,21 +21,8 @@ function getCondition(code, isDay) {
   return { label: 'Thunderstorms', icon: '⛈' }
 }
 
-function App({ displayName, username }) {
-  const showChatGPT = username === 'ben' 
-  const [now, setNow] = useState(new Date())
-
-  useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 30_000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const time = now.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  })
-
+function App({ displayName, username, now }) {
+  const showChatGPT = username === 'ben'
   const hour = now.getHours()
   const greeting = hour < 12
     ? 'Good Morning'
@@ -171,16 +158,6 @@ const [weatherError, setWeatherError] = useState(false)
 
       <footer className="dashboard-footer">
         <FootballTicker />
-        <div className="clock">
-          <time dateTime={now.toISOString()}>{time}</time>
-          <span>
-            {now.toLocaleDateString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: '2-digit',
-            })}
-          </span>
-        </div>
       </footer>
     </div>
   )

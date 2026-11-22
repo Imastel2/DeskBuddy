@@ -1305,3 +1305,99 @@ body {
   text-transform: none;
   text-shadow: none;
 }
+
+#root .dashboard .dashboard-footer {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+#root .account-toolbar .toolbar-clock {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.toolbar-clock strong {
+  font-size: 0.95rem;
+}
+
+.toolbar-clock span {
+  color: #bcc0d1;
+}
+
+@media (min-width: 650px) {
+  #root .account-shell {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+  }
+
+  #root .account-toolbar {
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 0;
+    padding: 6px 12px 0;
+  }
+
+  #root .account-shell .dashboard {
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    grid-template-rows: 44px minmax(0, 1fr) 60px;
+    gap: 8px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+  }
+
+  #root .dashboard .dashboard-header,
+  #root .dashboard .panels {
+    margin-inline: 12px;
+  }
+
+  #root .dashboard .panels {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  #root .dashboard .panels > :is(.panel, .task-sources) {
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    max-height: none;
+    border-radius: 24px;
+  }
+
+  #root .dashboard .dashboard-footer .football-ticker {
+    border-radius: 0;
+  }
+}
+
+#root .dashboard .header-weather {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+#root .dashboard .cfb-ticker::before {
+  font-size: 14px;
+}
+
+#root .dashboard .cfb-game strong {
+  font-size: 16px;
+}
+
+#root .dashboard .cfb-game .cfb-versus,
+#root .dashboard .cfb-game .cfb-final,
+#root .dashboard .cfb-game .cfb-date {
+  font-size: 13px;
+}

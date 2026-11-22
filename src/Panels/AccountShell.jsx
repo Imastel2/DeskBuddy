@@ -4,6 +4,12 @@ import { apiFetch } from '../api.js'
 import '../Styles/AccountShell.css'
 
 export default function AccountShell() {
+    const [now, setNow] = useState(() => new Date())
+
+    useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 30_000)
+    return () => clearInterval(timer)
+  }, [])
   const [user, setUser] = useState(null)
   const [checking, setChecking] = useState(true)
   const [busy, setBusy] = useState(false)
@@ -265,7 +271,21 @@ export default function AccountShell() {
   return (
     <div className="account-shell">
       <nav className="account-toolbar" aria-label="Account">
-        <span>{user.displayName}</span>
+        <time className="toolbar-clock" dateTime={now.toISOString()}>
+          <strong>
+            {now.toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit',
+            })}
+          </strong>
+          <span>
+            {now.toLocaleDateString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: '2-digit',
+            })}
+          </span>
+        </time>
 
         <div>
           <button
@@ -345,7 +365,7 @@ export default function AccountShell() {
         </section>
       )}
 
-      <App key={user.id} displayName={user.displayName} username={user.username} />
+      <App key={user.id} displayName={user.displayName} username={user.username} now={now} />
     </div>
   )
 }
